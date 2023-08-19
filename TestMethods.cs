@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using static TestProject1.Ticket;
@@ -15,6 +16,10 @@ namespace TestProject1
             Seven,
             Prime
         }
+
+        private static Queue<Ticket> paymentQueue = new Queue<Ticket>();
+        private static Queue<Ticket> subscriptionQueue = new Queue<Ticket>();
+        private static Queue<Ticket> cancellationQueue = new Queue<Ticket>();
 
         internal static Stack<int> GetNextGreaterValue(Stack<int> sourceStack)
         {
@@ -152,10 +157,6 @@ namespace TestProject1
         {
             SelectionSort(sourceList);
 
-            Queue<Ticket> paymentQueue = new Queue<Ticket>();
-            Queue<Ticket> subscriptionQueue = new Queue<Ticket>();
-            Queue<Ticket> cancellationQueue = new Queue<Ticket>();
-
             foreach (var ticket in sourceList)
             {
                 switch (ticket.RequestType)
@@ -218,9 +219,36 @@ namespace TestProject1
 
         internal static bool AddNewTicket(Queue<Ticket> targetQueue, Ticket ticket)
         {
-            bool result = false;
+            if (ticket.Turn > 99)
+            {
+                return false; // Ticket has a turn greater than 99
+            }
+            switch (ticket.RequestType)
+            {
+                case ERequestType.Payment:
+                    if (targetQueue == paymentQueue)
+                    {
+                        EnqueueSorted(targetQueue, ticket);
+                        return true;
+                    }
+                    break;
+                case ERequestType.Subscription:
+                    if (targetQueue == subscriptionQueue)
+                    {
+                        EnqueueSorted(targetQueue, ticket);
+                        return true;
+                    }
+                    break;
+                case ERequestType.Cancellation:
+                    if (targetQueue == cancellationQueue)
+                    {
+                        EnqueueSorted(targetQueue, ticket);
+                        return true;
+                    }
+                    break;
+            }
 
-            return result;
-        }        
-    }
-}
+            return false; // Invalid request type or mismatched target queue
+        }
+    }        
+   }
