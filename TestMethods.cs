@@ -106,14 +106,33 @@ namespace TestProject1
 
         internal static int CountDictionaryRegistriesWithValueType(Dictionary<int, EValueType> sourceDict, EValueType type)
         {
-            return 0;
+            int count = 0;
+
+            foreach (var kvp in sourceDict)
+            {
+                if (kvp.Value == type)
+                {
+                    count++;
+                }
+            }
+
+            return count;
         }
 
         internal static Dictionary<int, EValueType> SortDictionaryRegistries(Dictionary<int, EValueType> sourceDict)
         {
-            Dictionary<int, EValueType> result = null;
+            
+            List<KeyValuePair<int, EValueType>> sortedList = new List<KeyValuePair<int, EValueType>>(sourceDict);
 
-            return result;
+            sortedList.Sort((x, y) => y.Key.CompareTo(x.Key));
+
+            Dictionary<int, EValueType> sortedDictionary = new Dictionary<int, EValueType>();
+            foreach (var kvp in sortedList)
+            {
+                sortedDictionary.Add(kvp.Key, kvp.Value);
+            }
+
+            return sortedDictionary;
         }
 
         internal static Queue<Ticket>[] ClassifyTickets(List<Ticket> sourceList)
