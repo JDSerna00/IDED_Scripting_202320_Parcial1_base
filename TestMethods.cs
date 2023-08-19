@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace TestProject1
 {
@@ -15,9 +17,35 @@ namespace TestProject1
 
         internal static Stack<int> GetNextGreaterValue(Stack<int> sourceStack)
         {
-            Stack<int> result = null;
+            Stack<int> tempStack = new Stack<int>();           
+            Stack<int> result = new Stack<int>();
 
-            return result;
+            while (sourceStack.Count > 0)
+            {
+                int currentNumber = sourceStack.Pop();
+                int greaterSucceedingValue = -1;
+
+                foreach (int value in tempStack)
+                {
+                    if (value > currentNumber)
+                    {
+                        greaterSucceedingValue = value;
+                        break;
+                    }
+                }
+
+                result.Push(greaterSucceedingValue);
+                tempStack.Push(currentNumber);
+            }
+            
+            Stack<int> revResult = new Stack<int>();
+
+            while (result.Count > 0)
+            {
+                revResult.Push(result.Pop());
+            }
+
+            return revResult;
         }
 
         internal static Dictionary<int, EValueType> FillDictionaryFromSource(int[] sourceArr)
