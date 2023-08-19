@@ -161,16 +161,14 @@ namespace TestProject1
                 switch (ticket.RequestType)
                 {
                     case ERequestType.Payment:
-                        EnqueueSorted(paymentQueue,ticket);
+                        paymentQueue.Enqueue(ticket);
                         break;
                     case ERequestType.Subscription:
-                        EnqueueSorted(subscriptionQueue,ticket);
+                        subscriptionQueue.Enqueue(ticket);
                         break;
                     case ERequestType.Cancellation:
-                        EnqueueSorted(cancellationQueue, ticket);
+                        cancellationQueue.Enqueue(ticket);
                         break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
                 }
             }
 
