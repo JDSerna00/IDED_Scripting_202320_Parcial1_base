@@ -50,9 +50,58 @@ namespace TestProject1
 
         internal static Dictionary<int, EValueType> FillDictionaryFromSource(int[] sourceArr)
         {
-            Dictionary<int, EValueType> result = null;
+            Dictionary<int, EValueType> dictionary = new Dictionary<int, EValueType>();
 
-            return result;
+            foreach (int number in sourceArr)
+            {
+                if (number == 1)
+                {
+                    dictionary[number] = EValueType.Prime;
+                }
+
+                if (number % 2 == 0)
+                {
+                    dictionary[number] = EValueType.Two;
+                }
+                else if (number % 3 == 0)
+                {
+                    dictionary[number] = EValueType.Three;
+                }
+                else if (number % 5 == 0)
+                {
+                    dictionary[number] = EValueType.Five;
+                }
+                else if (number % 7 == 0)
+                {
+                    dictionary[number] = EValueType.Seven;
+                }
+                else if (IsPrime(number))
+                {
+                    dictionary[number] = EValueType.Prime;
+                }
+            }
+
+            return dictionary;
+        }
+
+        static bool IsPrime(int number)
+        {
+            if (number <= 1)
+                return false;
+
+            if (number <= 3)
+                return true;
+
+            if (number % 2 == 0 || number % 3 == 0)
+                return false;
+
+            for (int i = 5; i * i <= number; i += 6)
+            {
+                if (number % i == 0 || number % (i + 2) == 0)
+                    return false;
+            }
+
+            return true;
         }
 
         internal static int CountDictionaryRegistriesWithValueType(Dictionary<int, EValueType> sourceDict, EValueType type)
