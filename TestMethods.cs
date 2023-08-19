@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using static TestProject1.Ticket;
 
 namespace TestProject1
 {
@@ -149,9 +150,72 @@ namespace TestProject1
 
         internal static Queue<Ticket>[] ClassifyTickets(List<Ticket> sourceList)
         {
-            Queue<Ticket>[] result = null;
+            SelectionSort(sourceList);
 
-            return result;
+            Queue<Ticket> paymentQueue = new Queue<Ticket>();
+            Queue<Ticket> subscriptionQueue = new Queue<Ticket>();
+            Queue<Ticket> cancellationQueue = new Queue<Ticket>();
+
+            foreach (var ticket in sourceList)
+            {
+                switch (ticket.RequestType)
+                {
+                    case ERequestType.Payment:
+                        EnqueueSorted(paymentQueue,ticket);
+                        break;
+                    case ERequestType.Subscription:
+                        EnqueueSorted(subscriptionQueue,ticket);
+                        break;
+                    case ERequestType.Cancellation:
+                        EnqueueSorted(cancellationQueue, ticket);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+
+            return new Queue<Ticket>[] { paymentQueue, subscriptionQueue, cancellationQueue }; 
+        }
+        public static void SelectionSort(List<Ticket> sourceList)
+        {
+            int n = sourceList.Count;
+
+            for (int i = 0; i < n - 1; i++)
+            {
+                int minIndex = i;
+
+                for (int j = i + 1; j < n; j++)
+                {
+                    if (sourceList[j].Turn < sourceList[minIndex].Turn)
+                    {
+                        minIndex = j;
+                    }
+                }
+
+                if (minIndex != i)
+                {
+                    Ticket temp = sourceList[i];
+                    sourceList[i] = sourceList[minIndex];
+                    sourceList[minIndex] = temp;
+                }
+            }
+        }
+
+        public static void EnqueueSorted(Queue<Ticket> queue, Ticket newTicket)
+        {
+            Queue<Ticket> tempQueue = new Queue<Ticket>();
+
+            while (queue.Count > 0 && queue.Peek().Turn <= newTicket.Turn)
+            {
+                tempQueue.Enqueue(queue.Dequeue());
+            }
+
+            queue.Enqueue(newTicket);
+
+            while (tempQueue.Count > 0)
+            {
+                queue.Enqueue(tempQueue.Dequeue());
+            }
         }
 
         internal static bool AddNewTicket(Queue<Ticket> targetQueue, Ticket ticket)
