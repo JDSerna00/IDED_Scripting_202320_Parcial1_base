@@ -124,7 +124,19 @@ namespace TestProject1
             
             List<KeyValuePair<int, EValueType>> sortedList = new List<KeyValuePair<int, EValueType>>(sourceDict);
 
-            sortedList.Sort((x, y) => y.Key.CompareTo(x.Key));
+            for (int i = 1; i < sortedList.Count; i++)
+            {
+                var currentItem = sortedList[i];
+                int j = i - 1;
+
+                while (j >= 0 && currentItem.Key > sortedList[j].Key)
+                {
+                    sortedList[j + 1] = sortedList[j];
+                    j--;
+                }
+
+                sortedList[j + 1] = currentItem;
+            }
 
             Dictionary<int, EValueType> sortedDictionary = new Dictionary<int, EValueType>();
             foreach (var kvp in sortedList)
